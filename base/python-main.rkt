@@ -17,12 +17,6 @@
   ("--interp" "Interpret stdin as python"
    (run-python (current-input-port)))
 
-  ("--use-snapshot" snapfile "Use the provided snapshot file as initial store and env"
-   (set-snapshot-from-file snapfile))
-
-  ("--save-snapshot" snapfile "Interpret stdin as python, save snapshot to snapfile"
-   (run-python/snapshot (current-input-port) snapfile))
-
   ("--interp-py" "Interpret stdin as python using py-prelude.py"
    (define results ((mk-python-cmdline-eval (get-pypath)) "stdin" (current-input-port)))
    (display (car results) (current-output-port))
@@ -59,6 +53,7 @@
    (pretty-write (get-lexer-tokens (current-input-port))))
 
   ("--test" dirname "Run all tests in dirname"
+   (run-python/snapshot (open-input-string "___special('snapshot', None)"))
    (display (results-summary (run-tests (mk-proc-eval/silent python-test-runner) dirname))))
 
   ("--test-py" dirname "Run all tests in dirname using python"

@@ -29,24 +29,21 @@
 (define (python-test-runner _ port)
   (run-python port))
 
-(define snapshot #f)
-(define (set-snapshot-from-file filename)
-  (define snap-file (open-input-file filename))
-  (set! snapshot (sexp->snapshot (fasl->s-exp snap-file)))
-  (close-input-port snap-file))
-
+(define the-snapshot #f)
 (define (run-python port)
   (define interpreter
     (cond
-      [snapshot
-       (define env (snapshot-env snapshot))
-       (define sto (snapshot-sto snapshot))
+      [(snapshot? the-snapshot)
+       (printf "Using a snapshot\n")
+       (define env (snapshot-env the-snapshot))
+       (define sto (snapshot-sto the-snapshot))
        (lambda (expr) (interp-env expr env sto empty))]
       [else
+       (printf "Not using a snapshot\n")
        interp]))
   (define lib-wrapper
     (cond
-      [snapshot (lambda (x) x)]
+      [(snapshot? the-snapshot) (lambda (x) x)]
       [else python-lib])) 
   (interpreter
    (lib-wrapper
@@ -56,11 +53,10 @@
        (get-structured-python
         ((parser) port))))))))
 
-(define (run-python/snapshot port snap)
-  (define snap-file (open-output-file snap #:exists 'replace))
+(define (run-python/snapshot port)
   (define (handle-snapshot snapshot)
-    (s-exp->fasl (snapshot->sexp snapshot) snap-file)
-    (close-output-port snap-file))
+    (printf "Saving a snapshot\n")
+    (set! the-snapshot #f))
   (with-handlers
     ([snapshot? handle-snapshot])
     (run-python port)))
