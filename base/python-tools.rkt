@@ -111,6 +111,3 @@
 
 (define (get-lexer-tokens port)
   (lex-all port))
-
-(define (parse-test port)
-  (single-parse-test port))
