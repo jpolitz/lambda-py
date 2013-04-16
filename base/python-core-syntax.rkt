@@ -40,7 +40,8 @@ ParselTongue.
   [CBreak]
   [CContinue]
   [CModule (prelude : CExpr) (body : CExpr)]
-  [CConstructModule (source : CExpr)])
+  [CConstructModule (source : CExpr)]
+  [CSpecial (metadata : string) (expr : CExpr)])
 
 (define-type IdType
     [GlobalId]
@@ -59,6 +60,9 @@ ParselTongue.
   [VUndefined]
   [VSym (s : symbol)]
   [VPointer (a : Address)])
+
+(define-type Snapshot
+  [snapshot (env : Env) (sto : Store)])
 
 (define-type MetaVal
              [MetaNone]

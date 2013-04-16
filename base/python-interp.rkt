@@ -12,6 +12,7 @@
          (typed-in racket/base (append : ((listof 'a) (listof 'a) -> (listof'a))))
          (typed-in racket/base (format : (string 'a -> string)))
          (typed-in racket/list (last : ('a -> 'b)))
+         (typed-in racket/base (raise : ('a -> 'b)))
          )
 
 (define (handle-result env result fun)
@@ -197,6 +198,13 @@
   (begin ;(display expr) (display "\n")
          ;(display env) (display "\n\n")
   (type-case CExpr expr
+    [CSpecial (metadata e)
+     (cond
+      [(equal? metadata "snapshot")
+       (raise (snapshot env sto))]
+      [else
+       (handle-result env (interp-env e env sto stk)
+        (lambda (v s) (v*s v s)))])]
     [CModule (prelude body)
              (local [(define prelude-r (interp-env prelude env sto stk))]
                 (handle-result env prelude-r

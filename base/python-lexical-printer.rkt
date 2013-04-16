@@ -474,6 +474,7 @@
                                    this-expr)]
       [LexImportFrom (module names asnames level) (begin
                                                     (display this-expr)
-                                                    this-expr)])
+                                                    this-expr)]
+      [LexSpecial (s e) (begin (display this-expr) this-expr)])
     this-expr
     )))

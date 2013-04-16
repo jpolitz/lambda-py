@@ -109,6 +109,7 @@
   [LexNone]
   [LexBreak]
   [LexContinue]
+  [LexSpecial (metadata : string) (expr : LexExpr)]
   [LexCore (expr : CExpr)]
 
   ; import, which desugar to asname = __import__("name")

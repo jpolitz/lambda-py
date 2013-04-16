@@ -252,7 +252,8 @@
               [LexBlock [a b] [LexBlock a (recur b)]]
               [LexImport [names asnames] (LexImport names asnames)]
               [LexImportFrom [module names asnames level]
-                             (LexImportFrom module names asnames level)])))
+                             (LexImportFrom module names asnames level)]
+              [LexSpecial [s e] (LexSpecial s (recur e))])))
         (define recur
             (gen-recur default special-func)))
           (let ((ret (recur expr)))
@@ -498,7 +499,8 @@
               [LexContinue [] empty]
               [LexBlock [a b] (recur b)]
               [LexImport (names asnames) empty]
-              [LexImportFrom (module names asnames level) empty]))
+              [LexImportFrom (module names asnames level) empty]
+              [LexSpecial (s e) (recur e)]))
         (define (recur expr) ((gen-recur default special-func) expr)
             ))
           (recur expr)

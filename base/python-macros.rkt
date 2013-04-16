@@ -38,6 +38,10 @@
            (LexBinOp (second args)
                      (string->symbol (LexStr-s (first args)))
                      (third args))]
+          [(and (LexGlobalId? fun) (equal? (LexGlobalId-x fun) '___special)
+                (= (length args) 2) (LexStr? (first args)))
+           (LexCore (CSpecial (LexStr-s (first args))
+                              (second args)))]
           [else expr])]
         [else (default-recur)]))))
 

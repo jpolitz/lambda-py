@@ -5,12 +5,12 @@
   (only-in plai-typed some none)
   "python-core-syntax.rkt")
 
-(provide sexp->core sexp->store sexp->env sexp->val)
+(provide sexp->core sexp->store sexp->env sexp->val sexp->snapshot)
 
 (define (sexp->env sexp)
   (match sexp
-    [(list 'env (? list? pairs))
-     (make-immutable-hash pairs)]
+    [(list 'env (? list? envs))
+     (map make-immutable-hash envs)]
     [_ (error 'sexp->env (format "Bad env: ~a" sexp))]))
 (define (sexp->store sexp)
   (match sexp
@@ -144,4 +144,12 @@
     [(list 'construct-module e)
      (CConstructModule (sc e))]
     [(list 'yield e)
-     (CYield (sc e))]))
+     (CYield (sc e))]
+    [(list 'special s e)
+     (CSpecial s e)]))
+
+(define (sexp->snapshot sexp)
+  (match sexp
+    [(list env sto) (snapshot (sexp->env env) (sexp->store sto))]
+    [_ (error 'sexp->snapshot (format "Bad snapshot: ~a" sexp))]))
+

@@ -68,7 +68,7 @@
 (val-trip (VObjectClass 'some-c (some (MetaNum 42)) (hash (list (values 'bar 42))) (none)))
 
 (val-trip (VObjectClass 'some-c
-                        (some (MetaClosure (hash (list (values 'foo 0)))
+                        (some (MetaClosure (list (hash (list (values 'foo 0))))
                                            (list 'x 'y 'z)
                                            (some 'va)
                                            (CSym 'body)
@@ -80,3 +80,4 @@
                           (values 0 (VSym 'foo))
                           (values 1 (VPointer 1))))
                    2))
+

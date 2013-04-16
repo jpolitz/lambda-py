@@ -549,6 +549,7 @@
                   (make-sequence (map handle-delete targets)))]
       
       [LexBuiltinPrim (s args) (CBuiltinPrim s (map desugar args))]
+      [LexSpecial (s e) (CSpecial s (desugar e))]
       [LexCore (e) e]
       [else
         (error 'desugar

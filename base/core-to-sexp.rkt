@@ -10,7 +10,11 @@
     [none () '(no-var)]))
 
 (define (env->sexp env)
-  `(env ,(hash-map env (lambda (k v) (cons k v)))))
+  (local [
+    (define (one-env m)
+      (hash-map m (lambda (k v) (cons k v))))
+  ]
+  `(env ,(map one-env env))))
 (define (store->sexp sto)
   (type-case Store sto
     [store (locs next-loc)
@@ -134,5 +138,11 @@
      `(module ,(core->sexp prelude) ,(core->sexp body))]
     [CConstructModule (source)
      `(construct-module ,(core->sexp source))]
-    [CYield (e) `(yield ,(core->sexp e))])))
+    [CYield (e) `(yield ,(core->sexp e))]
+    [CSpecial (s e) `(special ,s ,(core->sexp e))])))
+
+(define (snapshot->sexp snap)
+  (type-case Snapshot snap
+    [snapshot (env sto) `(,(env->sexp env) ,(store->sexp sto))]))
+
 
